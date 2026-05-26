@@ -97,7 +97,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="bg-[#020617] pt-12 pb-24 px-4 sm:px-8 lg:px-12 text-slate-100 font-sans antialiased relative overflow-hidden select-none">
+    <section id="contact" className="bg-[#020617] pt-0.5 pb-24 px-4 sm:px-8 lg:px-12 text-slate-100 font-sans antialiased relative overflow-hidden select-none">
       
       {/* Structural Accent Top Divider */}
       <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-slate-800 to-transparent relative z-20 mb-12" />

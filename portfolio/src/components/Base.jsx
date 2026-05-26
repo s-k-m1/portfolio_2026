@@ -20,7 +20,6 @@ export default function Base({ children }) {
     { label: "Projects", path: "/projects" },
     { label: "Contact", path: "/contact" },
     { label: "Client Share", path: "/clientShare" }
-    
   ];
   
   const socialIcons = [
@@ -71,7 +70,7 @@ export default function Base({ children }) {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f29370e_1px,transparent_1px),linear-gradient(to_bottom,#1f29370e_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none z-0" />
       
       {/* Floating Capsule Nav System */}
-      <div className="fixed top-0 left-0 w-full z-50 flex justify-center px-4 sm:px-6 transition-all duration-500 pt-5 sm:pt-7">
+      <div className="fixed top-0 left-0 w-full z-50 flex justify-center px-2 sm:px-4 transition-all duration-500 pt-3 sm:pt-5">
         <header
           className={`w-full max-w-5xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] rounded-full border border-slate-800 bg-slate-950/95 shadow-[0_24px_50px_-12px_rgba(0,0,0,0.8)] backdrop-blur-xl flex items-center justify-between px-8 py-4 ${
             isScrolled ? "max-w-4xl border-slate-700/80" : ""
@@ -107,7 +106,7 @@ export default function Base({ children }) {
                   key={item.label}
                   to={item.path}
                   data-active={isActive}
-                  className={`px-5 py-2 text-sm font-medium transition-colors duration-300 relative z-10 ${
+                  className={`px-3 py-1 text-sm font-medium transition-colors duration-300 relative z-10 ${
                     isActive ? "text-blue-400 font-semibold" : "text-slate-300 hover:text-slate-100"
                   }`}
                 >
@@ -159,7 +158,7 @@ export default function Base({ children }) {
           navOpen ? "translate-x-0 shadow-[-20px_0_50px_rgba(0,0,0,0.9)]" : "translate-x-full"
         }`}
       >
-        <div className="space-y-5">
+        <div className="flex flex-col gap-5">
           <p className="text-[11px] font-mono tracking-[0.2em] text-slate-500 uppercase border-b border-slate-900/60 pb-2 flex items-center gap-2">
             <Terminal size={14} className="text-blue-500" /> MENU
           </p>
@@ -182,7 +181,7 @@ export default function Base({ children }) {
           </div>
         </div>
 
-        <div className="mt-auto space-y-4">
+        <div className="mt-auto flex flex-col gap-4">
           <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-slate-500">FIND ME ON</p>
           <div className="flex items-center gap-3">
             {socialIcons.map((s, i) => (
@@ -201,11 +200,11 @@ export default function Base({ children }) {
       </div>
 
       {/* Content Mount Engine */}
-      <main className="flex-1 w-full relative z-10 pt-36">{children}</main>
+      <main className="flex-1 w-full relative z-10 pt-20">{children}</main>
 
       {/* Premium Highly Visible Developer Footer */}
       <footer className="w-full bg-[#050b14] border-t border-slate-800 py-6 relative z-10 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
           
           <div className="text-[12px] text-slate-300 flex items-center gap-2 group">
             <Activity size={14} className="text-slate-500 group-hover:text-emerald-400 transition-colors duration-500" />

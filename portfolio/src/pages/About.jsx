@@ -70,19 +70,19 @@ export default function About({ data }) {
   
   const fallbackSkills = {
     frontend: [
-      { name: "React.js (SPA / Hooks)", percentage: 90 },
-      { name: "JavaScript (ES6+) & JSON", percentage: 88 },
-      { name: "Tailwind CSS & HTML5", percentage: 92 }
+      { name: "React.js (SPA / Hooks)", percentage: 60 },
+      { name: "JavaScript (ES6+) & JSON", percentage: 68 },
+      { name: "Tailwind CSS & HTML5", percentage: 72 }
     ],
     backend: [
-      { name: "Python & Django Framework", percentage: 94 },
-      { name: "Django REST Framework (DRF)", percentage: 92 },
-      { name: "PostgreSQL / MySQL / ORM", percentage: 88 }
+      { name: "Python & Django Framework", percentage: 64 },
+      { name: "Django REST Framework (DRF)", percentage: 62 },
+      { name: "PostgreSQL / MySQL / ORM", percentage: 70 }
     ],
     toolsAndLanguages: [
-      { name: "Postman API Testing", percentage: 90 },
+      { name: "Postman API Testing", percentage: 40 },
       { name: "Git & Enterprise GitHub", percentage: 86 },
-      { name: "Jira Agile Management", percentage: 82 },
+      { name: "Jira Agile Management", percentage: 40 },
       { name: "C / Java Basics", percentage: 65 }
     ]
   };
@@ -90,7 +90,7 @@ export default function About({ data }) {
   const skillsData = resolvedData?.skills || fallbackSkills;
 
   return (
-    <section id="about" className="relative pt-16 pb-28 px-4 sm:px-8 lg:px-12 bg-[#020617] text-slate-100 overflow-hidden">
+    <section className="relative pt-6 sm:pt-7 pb-15 px-4 sm:px-4 lg:px-8 bg-[#020617] text-slate-100 overflow-hidden">
       
       {/* Space Background Grid Accent */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-25 pointer-events-none" />
