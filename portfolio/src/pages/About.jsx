@@ -301,8 +301,8 @@ export default function About({ data }) {
         >
           {[
             { label: "DJANGO_DEPLOYMENTS", value: "12+", sub: "Full Stack Apps Online" },
-            { label: "API_TEST_ASSERTIONS", value: "150+", sub: "Verified Postman Runs" },
-            { label: "AGILE_SPRINTS", value: "25+", sub: "Organized via Jira Boards" },
+            { label: "API_TEST_ASSERTIONS", value: "50+", sub: "Verified Postman Runs" },
+            { label: "AGILE_SPRINTS", value: "5+", sub: "Organized via Jira Boards" },
             { label: "DATABASE_SCHEMAS", value: "40+", sub: "Relational Engine Tables" },
           ].map((metric, index) => (
             <div key={index} className="bg-slate-950 border-2 border-slate-800 hover:border-slate-700 p-5 rounded-xl font-mono shadow-xl transition-colors duration-300">

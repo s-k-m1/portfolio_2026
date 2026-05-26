@@ -1,173 +1,68 @@
 import React from "react";
-
-import {
-  Github,
-  ExternalLink,
-  Eye,
-  ArrowUpRight,
-  Database,
-  GraduationCap,
-  BookOpen,
-  Users,
-  ShieldCheck,
-  Layers,
-  Code
-} from "lucide-react";
-
+import { Github, ExternalLink, Database, GraduationCap, BookOpen, Users, ShieldCheck, Layers, Code } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function ProjectCard({
-  project,
-  variants,
-  handleLink,
-  index
-}) {
-
-  // Dynamic Icon System
+export default function ProjectCard({ project, index, handleLink }) {
   const getIcon = (type) => {
     const icons = {
-      database: <Database size={16} className="text-blue-400" />,
-      graduation: <GraduationCap size={16} className="text-emerald-400" />,
-      book: <BookOpen size={16} className="text-amber-400" />,
-      users: <Users size={16} className="text-purple-400" />,
-      shield: <ShieldCheck size={16} className="text-red-400" />,
-      layers: <Layers size={16} className="text-cyan-400" />
+      database: <Database size={16} />,
+      graduation: <GraduationCap size={16} />,
+      book: <BookOpen size={16} />,
+      users: <Users size={16} />,
+      shield: <ShieldCheck size={16} />,
+      layers: <Layers size={16} />
     };
-
-    return icons[type] || <Code size={16} className="text-white" />;
+    return icons[type] || <Code size={16} />;
   };
 
   return (
     <motion.div
       layout
-      variants={variants}
-      whileHover={{ y: -6, transition: { duration: 0.2 } }}
-      onClick={(e) =>
-        handleLink &&
-        handleLink(e, project.demo, project.title)
-      }
-      className="interactive-project-row group relative w-full bg-slate-950/20 border border-slate-900/60 rounded-xl sm:rounded-2xl p-5 sm:p-8 flex flex-col lg:grid lg:grid-cols-12 gap-5 lg:gap-8 items-start lg:items-center transition-all duration-300 ease-out hover:bg-slate-900/20 hover:border-slate-800/80 overflow-hidden cursor-pointer"
-      style={{ transformStyle: "preserve-3d" }}
+      whileHover={{ y: -8 }}
+      onClick={(e) => handleLink(e, project.demo)}
+      className="h-full flex flex-col bg-[#050b14] border border-slate-800 rounded-xl p-6 sm:p-8 cursor-pointer hover:border-blue-500/50 transition-all group"
     >
-
-      {/* Hover Glow */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-[radial-gradient(400px_circle_at_var(--mx,0px)_var(--my,0px),#1e3a8a0c,transparent_100%)]" />
-
-      {/* LEFT IDENTIFICATION */}
-      <div className="font-mono lg:col-span-2 space-y-1 relative z-10">
-
-        <span className="block text-[10px] text-slate-600 group-hover:text-blue-500 transition-colors">
-          SYS_BUILD_0{index + 1}
-        </span>
-
-        <span className="block text-[11px] font-medium text-slate-400 uppercase tracking-wider">
-          {project.scope || project.category}
-        </span>
-
+      {/* Index & Category */}
+      <div className="flex justify-between items-start mb-6">
+        <span className="font-mono text-[10px] text-slate-500">SYS_BUILD_0{index + 1}</span>
+        <div className="text-slate-400">
+           {getIcon(project.type)}
+        </div>
       </div>
 
-      {/* MAIN CONTENT */}
-      <div className="w-full lg:col-span-7 space-y-4 relative z-10">
-
-        {/* Title */}
-        <div className="flex items-center gap-3">
-
-          <div className="w-8 h-8 rounded-lg bg-slate-950 border border-slate-900 flex items-center justify-center shadow-inner">
-            {getIcon(project.type)}
-          </div>
-
-          <h3 className="text-base sm:text-xl font-bold text-white tracking-tight group-hover:text-blue-400 transition-colors duration-300 uppercase">
-            {project.title}
-          </h3>
-
-        </div>
-
-        {/* Description */}
-        <p className="text-slate-400 text-xs sm:text-sm font-light leading-relaxed">
+      {/* Main Content - Flex-grow forces this to push the footer down */}
+      <div className="flex-grow">
+        <h3 className="text-lg sm:text-xl font-bold text-white mb-3 uppercase leading-tight">
+          {project.title}
+        </h3>
+        <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-6 line-clamp-3">
           {project.desc}
         </p>
+      </div>
 
-        {/* Tech Stack */}
-        <div className="flex flex-wrap gap-2 pt-1">
-
+      {/* Tags & Footer Actions */}
+      <div className="mt-auto">
+        <div className="flex flex-wrap gap-2 mb-6">
           {project.tech?.map((tech, i) => (
-            <span
-              key={i}
-              className="text-[9px] sm:text-[10px] font-mono tracking-wider px-2.5 py-1 rounded-md bg-slate-950 border border-slate-900 text-slate-400 font-medium group-hover:text-slate-200 group-hover:border-slate-800 transition-colors duration-300"
-            >
+            <span key={i} className="text-[9px] uppercase font-mono px-2 py-1 bg-slate-900 border border-slate-800 text-slate-500 rounded">
               {tech}
             </span>
           ))}
-
         </div>
-
+        
+        <div className="flex gap-3 pt-4 border-t border-slate-900">
+           {project.github && (
+             <a href={project.github} onClick={(e) => e.stopPropagation()} className="text-slate-500 hover:text-blue-400">
+               <Github size={18} />
+             </a>
+           )}
+           {project.demo && project.demo !== "#" && (
+             <a href={project.demo} onClick={(e) => e.stopPropagation()} className="text-slate-500 hover:text-blue-400 ml-auto">
+               <ExternalLink size={18} />
+             </a>
+           )}
+        </div>
       </div>
-
-      {/* ACTIONS */}
-      <div className="w-full lg:col-span-3 lg:text-right pt-2 lg:pt-0 relative z-10">
-
-        <div className="flex flex-wrap lg:justify-end gap-3">
-
-          {/* GitHub */}
-          {project.github && (
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-[0.15em] px-4 py-3 rounded-lg bg-slate-950/40 border border-slate-900 text-slate-400 hover:text-white hover:border-blue-500/30 hover:bg-blue-500/5 transition-all duration-300"
-            >
-
-              <Github
-                size={14}
-                className="text-slate-500 group-hover:text-blue-400"
-              />
-
-              <span>CODE_MANIFEST</span>
-
-            </a>
-          )}
-
-          {/* Live Demo */}
-          {project.demo && project.demo !== "#" && (
-            <a
-              href={project.demo}
-              target="_blank"
-              rel="noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-[0.15em] px-4 py-3 rounded-lg bg-slate-950/40 border border-slate-900 text-slate-400 hover:text-white hover:border-blue-500/30 hover:bg-blue-500/5 transition-all duration-300"
-            >
-
-              <ExternalLink
-                size={14}
-                className="text-slate-500 group-hover:text-blue-400"
-              />
-
-              <span className="text-blue-400">
-                LIVE_SERVER
-              </span>
-
-            </a>
-          )}
-
-        </div>
-
-      </div>
-
-      {/* Optional Image Preview */}
-      {project.image && (
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-[0.07] transition-opacity duration-500 pointer-events-none">
-
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-
-        </div>
-      )}
-
     </motion.div>
   );
 }
