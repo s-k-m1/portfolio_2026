@@ -2,6 +2,23 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, ExternalLink, ArrowRight, Terminal, Eye, SlidersHorizontal } from "lucide-react";
 
+// Robust unified animation schemas for seamless filtering behavior
+const cardItemVariants = {
+  hidden: { opacity: 0, scale: 0.9, y: 20 },
+  visible: { 
+    opacity: 1, 
+    scale: 1, 
+    y: 0,
+    transition: { type: "spring", stiffness: 260, damping: 25 }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.9,
+    y: 20,
+    transition: { duration: 0.2 }
+  }
+};
+
 export default function Projects() {
   const [filter, setFilter] = useState("All");
   const [animate, setAnimate] = useState(false);
@@ -107,68 +124,68 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="bg-[#030712] pt-4 sm:pt-6 pb-16 sm:pb-24 px-4 sm:px-6 md:px-8 lg:px-16 text-slate-100 font-sans antialiased relative overflow-hidden select-none">
+    <section id="projects" className="bg-[#020617] pt-12 pb-24 px-4 sm:px-8 lg:px-12 text-slate-100 font-sans antialiased relative overflow-hidden">
       
-      {/* Structural Accent Top Divider */}
-      <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-slate-800/20 to-transparent relative z-20 mb-6 sm:mb-8" />
+      {/* Visual Accent Top Divider */}
+      <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-slate-800 to-transparent relative z-20 mb-12" />
       
-      {/* Ambient Underlying Backlighting */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[400px] h-[280px] sm:h-[400px] bg-blue-500/5 blur-[100px] sm:blur-[130px] pointer-events-none z-0" />
+      {/* Ambient Radial Mesh Lighting */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] sm:w-[600px] h-[400px] bg-blue-500/5 blur-[120px] pointer-events-none z-0" />
 
-      <div className="max-w-7xl mx-auto relative z-10 space-y-8 sm:space-y-12">
+      <div className="max-w-7xl mx-auto relative z-10 space-y-12">
         
-        {/* Header Block Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="max-w-2xl space-y-3 sm:space-y-4 text-left">
+        {/* Modernized Header Block Section */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b-2 border-slate-900">
+          <div className="max-w-3xl space-y-3 text-left">
             <motion.div 
-              initial={{ opacity: 0, translateY: 10 }}
-              animate={animate ? { opacity: 1, translateY: 0 } : {}}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="inline-flex items-center gap-2 bg-slate-950/80 border border-slate-900 px-2.5 py-1.5 rounded-md backdrop-blur-sm"
+              initial={{ opacity: 0, y: 10 }}
+              animate={animate ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 bg-slate-950 border-2 border-slate-800 px-3 py-1.5 rounded-md shadow-md"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+              <span className="text-xs font-mono uppercase tracking-[0.2em] text-slate-400 font-black">
                 PRODUCTION_CASE_STUDIES
               </span>
             </motion.div>
 
             <motion.h2 
-              initial={{ opacity: 0, translateY: 15 }}
-              animate={animate ? { opacity: 1, translateY: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-              className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white leading-tight"
+              initial={{ opacity: 0, y: 15 }}
+              animate={animate ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white uppercase leading-none"
             >
               Featured <span className="text-blue-500">Projects</span>
             </motion.h2>
             
             <motion.p 
-              initial={{ opacity: 0, translateY: 15 }}
-              animate={animate ? { opacity: 1, translateY: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-              className="text-slate-400 font-light leading-relaxed text-xs sm:text-sm md:text-base"
+              initial={{ opacity: 0, y: 15 }}
+              animate={animate ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-slate-300 font-normal leading-relaxed text-base sm:text-lg"
             >
-              A selection of my technical work in full-stack web architectures, secure frameworks, and dynamic automation logic.
+              An analytical review of architectural software solutions handling full-stack web environments, secure runtime logic, and automated workflows.
             </motion.p>
           </div>
 
-          {/* Filter Navigation Tabs */}
+          {/* Navigation Tabs */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={animate ? { opacity: 1 } : {}}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex items-center gap-1.5 bg-slate-950/60 border border-slate-900/80 p-1 rounded-xl font-mono text-[9px] sm:text-[10px] tracking-wider shrink-0 self-start md:self-end overflow-x-auto max-w-full lg:overflow-visible no-scrollbar"
+            className="flex items-center gap-2 bg-slate-950 border-2 border-slate-800 p-1.5 rounded-xl font-mono text-xs tracking-wider shrink-0 self-start lg:self-end overflow-x-auto max-w-full no-scrollbar shadow-xl"
           >
-            <div className="p-2 text-slate-600 hidden lg:block">
-              <SlidersHorizontal size={12} />
+            <div className="p-2 text-slate-500 hidden xl:block">
+              <SlidersHorizontal size={14} />
             </div>
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}
-                className={`px-3 py-2 rounded-lg font-medium transition-all duration-300 uppercase whitespace-nowrap ${
+                className={`px-4 py-2.5 rounded-lg font-bold transition-all duration-300 uppercase whitespace-nowrap ${
                   filter === cat
-                    ? "text-blue-400 bg-slate-900 border border-slate-800/60 font-bold shadow-md"
-                    : "text-slate-500 hover:text-slate-300 border border-transparent"
+                    ? "text-blue-400 bg-slate-900 border-2 border-slate-800 shadow-md font-black"
+                    : "text-slate-400 hover:text-slate-200 border border-transparent"
                 }`}
               >
                 {cat.replace(" ", "_")}
@@ -177,80 +194,81 @@ export default function Projects() {
           </motion.div>
         </div>
 
-        {/* Dynamic Project Grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 pt-2 min-h-[300px]">
+        {/* Layout Grid Wrapper */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-2 min-h-[400px]">
           <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, index) => (
+            {filteredProjects.map((project) => (
               <motion.div
                 layout
+                variants={cardItemVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
                 key={project.id}
-                initial={{ opacity: 0, scale: 0.98, y: 15 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 5 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 onClick={(e) => handleProjectLink(e, project.demo, project.title)}
-                className="group cursor-pointer bg-slate-950/20 border border-slate-900/60 rounded-2xl overflow-hidden hover:bg-slate-900/10 hover:border-slate-800/80 transition-all duration-500 ease-out flex flex-col justify-between max-w-2xl mx-auto w-full sm:max-w-none relative"
+                className="group cursor-pointer bg-slate-950/70 border-2 border-slate-800 rounded-2xl overflow-hidden hover:bg-slate-950/90 hover:border-slate-700 transition-all duration-300 flex flex-col justify-between max-w-2xl mx-auto w-full sm:max-w-none shadow-xl relative"
               >
-                {/* Media Enclosure Block with Overlay Trigger */}
-                <div className="relative h-48 sm:h-52 lg:h-54 overflow-hidden bg-slate-950">
+                {/* Media Container Box */}
+                <div className="relative h-56 overflow-hidden bg-slate-950 border-b-2 border-slate-900">
                   <img 
                     src={project.image} 
                     alt={project.title} 
-                    className="w-full h-full object-cover opacity-50 md:grayscale transition-all duration-700 ease-out group-hover:scale-105 group-hover:opacity-40 group-hover:grayscale-0"
+                    className="w-full h-full object-cover opacity-40 md:grayscale transition-all duration-700 ease-out group-hover:scale-105 group-hover:opacity-30 group-hover:grayscale-0"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent" />
                   
-                  {/* Interactive Target Badge Display */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-slate-950/30 font-mono backdrop-blur-[2px]">
-                    <div className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-[10px] tracking-widest text-blue-400 flex items-center gap-2 shadow-xl">
-                      <Eye size={12} className="animate-pulse" />
+                  {/* HUD Backdrop Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-slate-950/40 backdrop-blur-[3px]">
+                    <div className="px-4 py-2.5 bg-slate-950 border-2 border-slate-800 rounded-xl text-xs font-mono font-bold tracking-widest text-blue-400 flex items-center gap-2 shadow-2xl">
+                      <Eye size={14} className="animate-pulse text-blue-500" />
                       <span>{project.demo === "#" ? "REQUEST_LOCAL_DEV_DEMO" : "VISIT_LIVE_PROTOTYPE"}</span>
                     </div>
                   </div>
 
-                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-                    <span className="bg-slate-950/90 text-slate-400 border border-slate-800 text-[8px] sm:text-[9px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-md backdrop-blur-sm">
+                  <div className="absolute top-4 left-4">
+                    <span className="bg-slate-950 border-2 border-slate-800 text-slate-300 text-xs font-mono font-black uppercase tracking-widest px-3 py-1.5 rounded-md shadow-md">
                       {project.category}
                     </span>
                   </div>
                 </div>
 
-                {/* Information Payload Container */}
-                <div className="p-5 sm:p-6 flex-grow flex flex-col justify-between space-y-5">
-                  <div className="space-y-2">
-                    <h3 className="text-base sm:text-lg font-bold text-white tracking-tight group-hover:text-blue-400 transition-colors duration-300">
+                {/* Text Information Block */}
+                <div className="p-6 flex-grow flex flex-col justify-between space-y-6">
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-extrabold text-white tracking-tight group-hover:text-blue-400 transition-colors duration-300 uppercase">
                       {project.title}
                     </h3>
-                    <p className="text-slate-400 text-xs font-light leading-relaxed line-clamp-3 sm:line-clamp-4">
+                    <p className="text-slate-300 text-base font-normal leading-relaxed line-clamp-3 sm:line-clamp-4">
                       {project.desc}
                     </p>
                   </div>
 
-                  {/* Tech Stack Tags */}
-                  <div className="flex flex-wrap gap-1.5">
+                  {/* Tech Stack Indicators */}
+                  <div className="flex flex-wrap gap-2 pt-2">
                     {project.tech.map((t) => (
-                      <span key={t} className="text-[9px] sm:text-[10px] font-mono text-slate-500 bg-slate-950/80 border border-slate-900 px-2 py-0.5 rounded-md group-hover:text-slate-400 group-hover:border-slate-800 transition-colors duration-300">
+                      <span key={t} className="text-xs font-mono font-bold text-slate-400 bg-slate-950 border-2 border-slate-900 px-2.5 py-1 rounded-md group-hover:text-slate-200 group-hover:border-slate-800 transition-colors duration-300">
                         {t}
                       </span>
                     ))}
                   </div>
 
-                  {/* Action Navigation Toggles */}
-                  <div className="flex gap-5 border-t border-slate-900/60 pt-4 mt-1">
+                  {/* Action Toggles row */}
+                  <div className="flex gap-6 border-t border-slate-900 pt-5 mt-2">
                     <a 
                       href={project.github} 
                       target="_blank" 
                       rel="noreferrer"
-                      className="action-btn flex items-center gap-1.5 text-[10px] sm:text-xs font-mono tracking-wider text-slate-400 hover:text-white transition-colors duration-300 touch-manipulation min-h-8"
+                      className="action-btn flex items-center gap-2 text-xs font-mono font-bold tracking-wider text-slate-400 hover:text-white transition-colors duration-200 touch-manipulation min-h-9"
                     >
-                      <Github size={13} className="text-slate-500 group-hover:text-blue-400 transition-colors" /> 
-                      <span>CODE</span>
+                      <Github size={15} className="text-slate-500 group-hover:text-blue-400 transition-colors" /> 
+                      <span>CODE_MANIFEST</span>
                     </a>
 
                     {project.demo === "#" ? (
-                      <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-mono tracking-wider text-slate-600 select-none min-h-8">
-                        <span className="w-1 h-1 rounded-full bg-slate-700" />
+                      <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-wider text-slate-600 select-none min-h-9">
+                        <span className="w-1.5 h-1.5 rounded-full bg-slate-700 animate-pulse" />
                         <span>LOCAL_ENVIRONMENT</span>
                       </div>
                     ) : (
@@ -258,10 +276,10 @@ export default function Projects() {
                         href={project.demo} 
                         target="_blank"
                         rel="noreferrer"
-                        className="action-btn flex items-center gap-1.5 text-[10px] sm:text-xs font-mono tracking-wider text-slate-400 hover:text-white transition-colors duration-300 touch-manipulation min-h-8"
+                        className="action-btn flex items-center gap-2 text-xs font-mono font-bold tracking-wider text-slate-400 hover:text-white transition-colors duration-200 touch-manipulation min-h-9"
                       >
-                        <ExternalLink size={13} className="text-slate-500 group-hover:text-blue-400 transition-colors" /> 
-                        <span className="text-blue-400/90 font-bold">LIVE_VIEW</span>
+                        <ExternalLink size={15} className="text-slate-500 group-hover:text-blue-400 transition-colors" /> 
+                        <span className="text-blue-400 font-black">LIVE_SERVER</span>
                       </a>
                     )}
                   </div>
@@ -269,33 +287,32 @@ export default function Projects() {
               </motion.div>
             ))}
           </AnimatePresence>
-        </motion.div>
+        </div>
 
-        {/* Bottom Call To Action Block */}
+        {/* Highlight Footer Banner */}
         <motion.div 
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="pt-8 sm:pt-12"
+          className="pt-12"
         >
-          <div className="bg-slate-950/30 border border-slate-900/80 p-6 sm:p-10 lg:p-12 rounded-2xl relative overflow-hidden backdrop-blur-sm text-left flex flex-col md:flex-row md:items-center md:justify-between gap-6 max-w-2xl mx-auto w-full sm:max-w-none">
-            <div className="absolute top-0 right-0 w-[180px] h-[180px] bg-indigo-500/5 blur-[70px] pointer-events-none" />
+          <div className="bg-slate-950 border-2 border-slate-800 p-6 sm:p-10 rounded-2xl relative overflow-hidden backdrop-blur-md text-left flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 shadow-2xl">
+            <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-indigo-500/5 blur-[80px] pointer-events-none" />
             
-            <div className="space-y-2 max-w-xl">
-              <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">Have a custom architecture deployment requirement?</h3>
-              <p className="text-slate-400 text-xs font-light leading-relaxed">
-                I am actively open to engineering high-availability databases, automated logic streams, or custom full-stack solutions.
+            <div className="space-y-3 max-w-2xl">
+              <h3 className="text-xl sm:text-2xl font-extrabold text-white uppercase tracking-wide">Have a custom architecture deployment requirement?</h3>
+              <p className="text-slate-300 text-sm sm:text-base font-normal leading-relaxed">
+                I am actively open to engineering high-availability databases, custom full-stack solutions, or modular microservices optimized for enterprise execution workflows.
               </p>
             </div>
 
             <button 
               onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-white font-medium text-[11px] font-mono tracking-widest uppercase rounded-xl transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap w-full md:w-auto touch-manipulation h-11"
+              className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-slate-900 hover:bg-slate-850 border-2 border-slate-800 text-white font-black text-xs font-mono tracking-widest uppercase rounded-xl transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 shrink-0 touch-manipulation h-12 shadow-lg"
             >
-              <Terminal size={13} className="text-blue-500" />
+              <Terminal size={14} className="text-blue-500" />
               <span>Initialize_Inquiry</span>
-              <ArrowRight size={11} className="text-slate-400" />
+              <ArrowRight size={13} className="text-slate-400" />
             </button>
           </div>
         </motion.div>
