@@ -74,22 +74,29 @@ export default function Home() {
             FULL STACK DEVELOPER
           </div>
 
-          {/* NAME */}
-          <h1 className="text-5xl font-bold">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+  
+        {/* LEFT CONTENT */}
+        <div className="flex-1">
+          <h1 className="text-5xl font-bold mb-4">
             Saroj Kumar <span className="text-slate-400">Mahato</span>
           </h1>
 
-          {/* IMAGE (NOW UNDER NAME) */}
-          <img
-            src={skmPic}
-            alt="profile"
-            className="w-170 h-110 rounded-2xl object-cover border border-slate-800"
-          />
-
-          {/* DESCRIPTION */}
           <p className="text-slate-400 max-w-xl leading-relaxed">
             I build scalable web applications using React, Django, and modern system architecture.
           </p>
+        </div>
+
+        {/* RIGHT IMAGE */}
+        <div className="flex justify-center">
+          <img
+            src={skmPic}
+            alt="profile"
+            className="w-95 h-90 rounded-full object-cover border-4 border-slate-800"
+          />
+        </div>
+
+      </div>
 
           {/* BUTTON */}
           <button

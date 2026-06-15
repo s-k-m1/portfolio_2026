@@ -30,6 +30,8 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/clientShare" element={<ClientShare />} />
           <Route path="/projects" element={<Projects />} />
+          {/* <Route path="/login" element={<LoginPage />} /> */}
+          {/* <Route path="/register" element={<RegisterPage />} /> */}
         </Routes>
       </Suspense>
     </Base>
