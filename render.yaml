@@ -1,0 +1,83 @@
+# Render Blueprint — Portfolio
+# Requires: push this repo (frontend/ + backend/) to GitHub, then create a
+# Blueprint from the GitHub repo. Service URLs below assume default names:
+#   API:      https://portfolio-api.onrender.com
+#   Frontend: https://portfolio-frontend.onrender.com
+# Change ALLOWED_HOSTS / CORS_ALLOWED_ORIGINS if you rename services or use a custom domain.
+
+databases:
+  - name: portfolio-postgres
+    plan: free
+    databaseName: portfolio_db
+    user: portfolio
+
+services:
+  # ---------------------------------------------------------------------
+  # Backend — Django REST Framework
+  # ---------------------------------------------------------------------
+  - type: web
+    name: portfolio-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    preDeployCommand: python manage.py migrate --noinput && python manage.py collectstatic --noinput && python manage.py seed_portfolio
+    startCommand: gunicorn portfolio.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: "3.13.0"
+      - key: ALLOWED_HOSTS
+        value: portfolio-api.onrender.com
+      - key: ADMIN_URL
+        value: dashboard
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://portfolio-frontend.onrender.com
+      - key: SECURE_SSL_REDIRECT
+        value: "True"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: portfolio-postgres
+          property: connectionString
+      - key: CONTACT_EMAIL
+        value: info@saroj01.com.np
+      - key: EMAIL_BACKEND
+        value: django.core.mail.backends.smtp.EmailBackend
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        sync: false
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: EMAIL_USE_TLS
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        sync: false
+      # Optional: bootstrap an admin account on first deploy (then remove these vars!)
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+
+  # ---------------------------------------------------------------------
+  # Frontend — Next.js (static + SSG/ISR, server-rendered on demand)
+  # ---------------------------------------------------------------------
+  - type: web
+    name: portfolio-frontend
+    runtime: node
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: "20.x"
+      - key: NEXT_PUBLIC_API_URL
+        value: https://portfolio-api.onrender.com/api
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://portfolio-frontend.onrender.com
