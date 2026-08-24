@@ -16,7 +16,7 @@ import {
   logout,
   isAdmin,
 } from "@/lib/auth";
-import { ADMIN_RESOURCES } from "@/lib/adminResources";
+import { ADMIN_RESOURCES } from "@/lib/dashboardResources";
 import { SITE } from "@/lib/site";
 
 export default function AdminLayout({
@@ -34,7 +34,7 @@ export default function AdminLayout({
     async function guard() {
       const token = getToken();
       if (!token) {
-        router.replace("/admin/login");
+        router.replace("/dashboard/login");
         return;
       }
       try {
@@ -42,14 +42,14 @@ export default function AdminLayout({
         if (!active) return;
         if (!isAdmin(me)) {
           await logout();
-          router.replace("/admin/login");
+          router.replace("/dashboard/login");
           return;
         }
         setChecked(true);
       } catch {
         if (!active) return;
         await logout();
-        router.replace("/admin/login");
+        router.replace("/dashboard/login");
       }
     }
     guard();
@@ -61,7 +61,7 @@ export default function AdminLayout({
   async function onLogout() {
     setBusy(true);
     await logout();
-    router.replace("/admin/login");
+    router.replace("/dashboard/login");
   }
 
   if (!checked) {
@@ -83,7 +83,7 @@ export default function AdminLayout({
     <div className="flex min-h-screen bg-night text-slate-200">
       <aside className="hidden w-64 shrink-0 flex-col border-r border-white/10 bg-ink/60 p-4 md:flex">
         <Link
-          href="/admin"
+          href="/dashboard"
           className="mb-6 flex items-center gap-2.5 px-2 py-1"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500">
@@ -97,9 +97,9 @@ export default function AdminLayout({
 
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto">
           <Link
-            href="/admin"
+            href="/dashboard"
             className={`${linkBase} ${
-              isActive("/admin") && pathname === "/admin"
+              isActive("/dashboard") && pathname === "/dashboard"
                 ? "bg-white/10 text-white"
                 : "text-slate-400 hover:bg-white/5 hover:text-white"
             }`}
@@ -113,9 +113,9 @@ export default function AdminLayout({
           {ADMIN_RESOURCES.map((r) => (
             <Link
               key={r.key}
-              href={`/admin/${r.key}`}
+              href={`/dashboard/${r.key}`}
               className={`${linkBase} ${
-                isActive(`/admin/${r.key}`)
+                isActive(`/dashboard/${r.key}`)
                   ? "bg-white/10 text-white"
                   : "text-slate-400 hover:bg-white/5 hover:text-white"
               }`}
@@ -125,9 +125,9 @@ export default function AdminLayout({
           ))}
 
           <Link
-            href="/admin/inquiries"
+            href="/dashboard/inquiries"
             className={`${linkBase} ${
-              isActive("/admin/inquiries")
+              isActive("/dashboard/inquiries")
                 ? "bg-white/10 text-white"
                 : "text-slate-400 hover:bg-white/5 hover:text-white"
             }`}

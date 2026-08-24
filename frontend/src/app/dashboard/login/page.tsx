@@ -14,7 +14,7 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
 
   if (typeof window !== "undefined" && getToken()) {
-    router.replace("/admin");
+    router.replace("/dashboard");
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -23,7 +23,7 @@ export default function AdminLoginPage() {
     setLoading(true);
     try {
       await login(username, password);
-      router.push("/admin");
+      router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
       setLoading(false);

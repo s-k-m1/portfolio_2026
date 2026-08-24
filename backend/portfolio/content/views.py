@@ -1,11 +1,12 @@
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
+
+from portfolio.permissions import IsAdminOrReadOnly
 
 from .models import ContentBlock
 from .serializers import ContentBlockSerializer
 
 
-class ContentBlockViewSet(viewsets.ReadOnlyModelViewSet):
+class ContentBlockViewSet(viewsets.ModelViewSet):
     queryset = ContentBlock.objects.all()
     serializer_class = ContentBlockSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminOrReadOnly]

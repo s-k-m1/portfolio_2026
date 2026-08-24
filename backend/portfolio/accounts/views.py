@@ -6,10 +6,12 @@ from .models import Profile
 from .serializers import ProfileSerializer
 
 
-class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
+class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAdminOrReadOnly]
+    # Singleton profile: allow viewing/editing, never create/delete via API
+    http_method_names = ["get", "put", "patch", "head", "options"]
 
 
 class ProfileCreateView(generics.CreateAPIView):

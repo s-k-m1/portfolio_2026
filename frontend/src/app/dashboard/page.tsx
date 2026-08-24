@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, LayoutDashboard } from "lucide-react";
 import { adminFetch } from "@/lib/auth";
-import { ADMIN_RESOURCES } from "@/lib/adminResources";
+import { ADMIN_RESOURCES } from "@/lib/dashboardResources";
 
 interface Counts {
   [key: string]: number | null;
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
         {ADMIN_RESOURCES.map((r) => (
           <Link
             key={r.key}
-            href={`/admin/${r.key}`}
+            href={`/dashboard/${r.key}`}
             className="glass group flex items-center justify-between rounded-2xl p-5 transition-colors hover:border-violet-400/40"
           >
             <div>
