@@ -53,6 +53,11 @@ export const viewport: Viewport = {
   themeColor: "#070911",
 };
 
+// Render dynamically: every page fetches portfolio data from the separate
+// Django API (Railway/Neon) at request time, so we must not attempt static
+// prerendering (which would hit the API during `next build`).
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
