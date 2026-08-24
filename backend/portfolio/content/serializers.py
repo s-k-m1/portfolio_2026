@@ -5,4 +5,4 @@ from .models import ContentBlock
 class ContentBlockSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContentBlock
-        fields = ["key", "content"]
+        fields = ["id", "key", "content"]
