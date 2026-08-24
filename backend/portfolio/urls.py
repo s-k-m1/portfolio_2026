@@ -1,6 +1,7 @@
 import os
 
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -15,6 +16,8 @@ _two_factor_urlpatterns = _two_factor_urlpatterns[0]
 _admin_path = os.environ.get("ADMIN_URL", "admin/").strip("/")
 
 urlpatterns = [
+    # Lightweight health check for platforms (e.g. Cloud Run) that probe "/"
+    path("", lambda request: HttpResponse("ok", content_type="text/plain")),
     path(f"{_admin_path}/", admin.site.urls),
     # Two-factor auth landing pages (used by the OTP-protected admin login)
     path("", include((_two_factor_urlpatterns, "two_factor"))),

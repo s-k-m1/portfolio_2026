@@ -25,9 +25,9 @@ if not _allowed and not DEBUG:
 ALLOWED_HOSTS = [h.strip() for h in (_allowed or "*").split(",") if h.strip()]
 
 if not DEBUG:
-    # Railway serves the app from *.railway.app; cover all generated subdomains
-    # so ALLOWED_HOSTS doesn't have to list each one explicitly.
-    ALLOWED_HOSTS += [".railway.app", ".up.railway.app"]
+    # Cover platform-generated subdomains so ALLOWED_HOSTS doesn't have to list
+    # each one explicitly (Railway, Google Cloud Run, Koyeb).
+    ALLOWED_HOSTS += [".railway.app", ".up.railway.app", ".run.app", ".koyeb.app"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
