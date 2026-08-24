@@ -1,4 +1,4 @@
-import InquiryManager from "@/components/dashboard/InquiryManager";
+import InquiryManager from "@/components/admin/InquiryManager";
 
 export default function InquiriesPage() {
   return <InquiryManager />;

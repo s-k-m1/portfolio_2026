@@ -16,7 +16,7 @@ import {
   logout,
   isAdmin,
 } from "@/lib/auth";
-import { ADMIN_RESOURCES } from "@/lib/dashboardResources";
+import { ADMIN_RESOURCES } from "@/lib/adminResources";
 import { SITE } from "@/lib/site";
 
 export default function AdminLayout({

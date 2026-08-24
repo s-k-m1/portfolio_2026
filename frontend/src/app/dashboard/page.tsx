@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, LayoutDashboard } from "lucide-react";
 import { adminFetch } from "@/lib/auth";
-import { ADMIN_RESOURCES } from "@/lib/dashboardResources";
+import { ADMIN_RESOURCES } from "@/lib/adminResources";
 
 interface Counts {
   [key: string]: number | null;

@@ -3,8 +3,8 @@
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { ADMIN_RESOURCES } from "@/lib/dashboardResources";
-import ResourceManager from "@/components/dashboard/ResourceManager";
+import { ADMIN_RESOURCES } from "@/lib/adminResources";
+import ResourceManager from "@/components/admin/ResourceManager";
 
 export default function AdminResourcePage() {
   const params = useParams<{ resource: string }>();
