@@ -58,6 +58,11 @@ export default function AdminLayout({
     };
   }, [router]);
 
+  // The login page is public — render it standalone, without the guard shell/sidebar.
+  if (pathname === "/dashboard/login") {
+    return <>{children}</>;
+  }
+
   async function onLogout() {
     setBusy(true);
     await logout();
