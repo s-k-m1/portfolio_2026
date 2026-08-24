@@ -513,9 +513,22 @@ class Command(BaseCommand):
                 content_created += 1
         created["content_blocks"] = content_created
 
-        user, _ = User.objects.get_or_create(username="saroj", defaults={"is_staff": True})
+        # Ensure a usable superuser always exists so the dashboard can be reached.
+        # Prefer ADMIN_USERNAME / ADMIN_PASSWORD env vars (set them in Render for
+        # production); otherwise fall back to a known working account.
+        admin_user = (
+            getattr(settings, "ADMIN_USERNAME", "") or os.environ.get("ADMIN_USERNAME", "")
+        ) or "saroj"
+        admin_pass = (
+            getattr(settings, "ADMIN_PASSWORD", "") or os.environ.get("ADMIN_PASSWORD", "")
+        ) or "Skm@#$#1"
+        su, _ = User.objects.get_or_create(username=admin_user)
+        su.is_staff = True
+        su.is_superuser = True
+        su.set_password(admin_pass)
+        su.save()
         profile, created_profile = Profile.objects.get_or_create(
-            user=user,
+            user=su,
             defaults={
                 "phone": "+977-9807827561",
                 "address": "Kathmandu, Nepal",
@@ -533,19 +546,6 @@ class Command(BaseCommand):
         elif not profile.linkedin:
             profile.linkedin = "https://www.linkedin.com/in/saroj-kumar-mahato"
             profile.save()
-
-        # Bootstrap a superuser from env (Render first deploy), then unset these vars
-        admin_user = getattr(settings, "ADMIN_USERNAME", "") or os.environ.get("ADMIN_USERNAME", "")
-        admin_pass = getattr(settings, "ADMIN_PASSWORD", "") or os.environ.get("ADMIN_PASSWORD", "")
-        if admin_user and admin_pass:
-            su, su_created = User.objects.get_or_create(
-                username=admin_user, defaults={"is_staff": True, "is_superuser": True}
-            )
-            if not su.is_superuser:
-                su.is_staff = True
-                su.is_superuser = True
-            su.set_password(admin_pass)
-            su.save()
 
         self.stdout.write(
             self.style.SUCCESS(
