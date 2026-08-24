@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { login, getToken } from "@/lib/auth";
-import { SITE } from "@/lib/site";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -31,24 +30,15 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-6">
-      <div className="bg-grid absolute inset-0" aria-hidden />
-      <div className="aurora-blob left-[-10%] top-[-10%] h-72 w-72 animate-float bg-violet-600/25" aria-hidden />
-      <div className="aurora-blob right-[-10%] bottom-[-10%] h-72 w-72 animate-float-slow bg-cyan-500/20" aria-hidden />
-
+    <div className="flex min-h-screen items-center justify-center bg-night px-6">
       <form
         onSubmit={onSubmit}
-        className="glass relative w-full max-w-sm rounded-3xl p-8 shadow-2xl"
+        className="w-full max-w-sm rounded-2xl border border-white/10 bg-ink/60 p-8 shadow-xl"
       >
-        <div className="mb-6 flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500">
-            <Lock className="h-5 w-5 text-white" />
-          </span>
-          <div>
-            <h1 className="text-lg font-bold text-white">Super Admin</h1>
-            <p className="text-xs text-slate-400">{SITE.shortName}</p>
-          </div>
-        </div>
+        <h1 className="mb-1 text-xl font-bold text-white">Admin Login</h1>
+        <p className="mb-6 text-sm text-slate-400">
+          Sign in to manage your portfolio
+        </p>
 
         <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-slate-400">
           Username
@@ -58,7 +48,7 @@ export default function AdminLoginPage() {
           onChange={(e) => setUsername(e.target.value)}
           autoComplete="username"
           required
-          className="mb-4 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition-colors focus:border-violet-400/50"
+          className="mb-4 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-violet-400/50"
         />
 
         <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-slate-400">
@@ -70,7 +60,7 @@ export default function AdminLoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
           required
-          className="mb-5 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition-colors focus:border-violet-400/50"
+          className="mb-5 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-violet-400/50"
         />
 
         {error && (
@@ -82,7 +72,7 @@ export default function AdminLoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition-all hover:brightness-110 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition-all hover:brightness-110 disabled:opacity-60"
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           Sign in
