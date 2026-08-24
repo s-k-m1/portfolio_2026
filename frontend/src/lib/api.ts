@@ -14,7 +14,9 @@ import type {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
 
-const REVALIDATE = 3600;
+// Public pages always fetch fresh data so admin edits appear immediately.
+// Pass { cache: "force-cache", revalidate: N } to a specific call to opt back in.
+const DEFAULT_CACHE: RequestCache = "no-store";
 
 export class ApiError extends Error {
   constructor(
@@ -37,8 +39,10 @@ async function request<T>(
       "Content-Type": "application/json",
       ...init?.headers,
     },
-    next: { revalidate: options?.revalidate ?? REVALIDATE },
-    ...(options?.cache ? { cache: options.cache } : {}),
+    cache: options?.cache ?? DEFAULT_CACHE,
+    ...(options?.revalidate != null
+      ? { next: { revalidate: options.revalidate } }
+      : {}),
   });
 
   if (!res.ok) {

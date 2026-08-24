@@ -20,6 +20,9 @@ interface ProjectPageProps {
   params: Promise<{ id: string }>;
 }
 
+// Always render on demand so admin edits show immediately.
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   const projects = await getProjects();
   return projects.slice(0, 10).map((p) => ({ id: String(p.id) }));
