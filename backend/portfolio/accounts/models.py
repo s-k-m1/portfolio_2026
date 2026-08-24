@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from portfolio.validators import image_validators
+
 
 class Profile(models.Model):
     user = models.OneToOneField(
@@ -16,7 +18,7 @@ class Profile(models.Model):
     linkedin = models.URLField(blank=True)
     portfolio_url = models.URLField(blank=True)
     portfolio_description = models.TextField(blank=True)
-    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
+    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True, validators=image_validators)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -7,6 +7,7 @@ import type {
   Paginated,
   Profile,
   Project,
+  ProjectReview,
   Service,
   Skill,
 } from "@/types";
@@ -148,9 +149,28 @@ export async function sendContactMessage(payload: {
   email: string;
   subject: string;
   message: string;
+  website?: string;
 }): Promise<{ detail: string }> {
   return request<{ detail: string }>("/contact-form/", {
     method: "POST",
     body: JSON.stringify(payload),
   });
+}
+
+export async function getProjectReviews(id: string): Promise<ProjectReview[]> {
+  try {
+    return await list<ProjectReview>(`/projects/${id}/reviews/`);
+  } catch {
+    return [];
+  }
+}
+
+export async function createProjectReview(
+  id: string,
+  payload: { name: string; email?: string; rating: number; comment: string },
+): Promise<{ detail: string }> {
+  return request<{ detail: string }>(`/projects/${id}/reviews/`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  }, { cache: "no-store" });
 }

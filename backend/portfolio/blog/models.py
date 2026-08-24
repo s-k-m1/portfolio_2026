@@ -1,5 +1,7 @@
 from django.db import models
 
+from portfolio.validators import image_validators
+
 
 class BlogTag(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -19,7 +21,7 @@ class BlogPost(models.Model):
         ("Case Study", "Case Study"),
     ])
     content = models.TextField()
-    image = models.ImageField(upload_to="blog/", blank=True, null=True)
+    image = models.ImageField(upload_to="blog/", blank=True, null=True, validators=image_validators)
     image_url = models.URLField(blank=True, default="")
     video_url = models.URLField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)

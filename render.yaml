@@ -43,21 +43,21 @@ services:
           name: portfolio-postgres
           property: connectionString
       - key: CONTACT_EMAIL
-        value: info@saroj01.com.np
+        value: mr.skm05@gmail.com
       - key: EMAIL_BACKEND
         value: django.core.mail.backends.smtp.EmailBackend
       - key: EMAIL_HOST
-        sync: false
+        value: smtp.gmail.com
       - key: EMAIL_PORT
         sync: false
       - key: EMAIL_HOST_USER
-        sync: false
+        value: mr.skm05@gmail.com
       - key: EMAIL_HOST_PASSWORD
         sync: false
       - key: EMAIL_USE_TLS
-        sync: false
+        value: "True"
       - key: DEFAULT_FROM_EMAIL
-        sync: false
+        value: mr.skm05@gmail.com
       # Optional: bootstrap an admin account on first deploy (then remove these vars!)
       - key: ADMIN_USERNAME
         sync: false

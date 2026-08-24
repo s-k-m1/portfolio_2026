@@ -1,9 +1,9 @@
 export const SITE = {
   name: "Saroj Kumar Mahato",
   shortName: "SKM.DEV",
-  role: "Full Stack Developer",
+  role: "Backend Developer & Full Stack Engineer",
   tagline:
-    "I build scalable web applications using React, Django, and modern system architecture.",
+    "I build scalable, secure backend systems and full-stack web applications with Django, DRF, and React.",
   location: "Kathmandu, Nepal",
   email: "info@saroj01.com.np",
   phone: "+977-9807827561",
@@ -12,13 +12,19 @@ export const SITE = {
   twitter: "https://x.com/skm",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   description:
-    "Full Stack Developer portfolio of Saroj Kumar Mahato — building scalable web applications with React, Django, and PostgreSQL.",
+    "Backend Developer & Full Stack Engineer — Saroj Kumar Mahato builds scalable, secure APIs and web applications with Django, Django REST Framework, PostgreSQL, and React.",
   keywords: [
     "Saroj Kumar Mahato",
+    "Backend Developer",
+    "Backend Developer Nepal",
+    "Django Developer",
+    "Django REST Framework",
+    "Python Backend Developer",
     "Full Stack Developer",
     "React Developer",
-    "Django Developer",
+    "PostgreSQL Developer",
+    "API Developer",
+    "Freelance Backend Developer Nepal",
     "Portfolio",
-    "Freelance Developer Nepal",
   ] as string[],
 };

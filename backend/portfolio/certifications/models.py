@@ -1,12 +1,14 @@
 from django.db import models
 
+from portfolio.validators import image_validators
+
 
 class Certification(models.Model):
     title = models.CharField(max_length=200)
     issuer = models.CharField(max_length=200)
     issue_date = models.DateField()
     expiry_date = models.DateField(blank=True, null=True)
-    image = models.ImageField(upload_to="certifications/", blank=True, null=True)
+    image = models.ImageField(upload_to="certifications/", blank=True, null=True, validators=image_validators)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

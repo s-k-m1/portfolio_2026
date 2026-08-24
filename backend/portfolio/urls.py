@@ -5,11 +5,19 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from two_factor.urls import urlpatterns as _two_factor_urlpatterns
+
+# django-two-factor-auth 1.18 ships its urlpatterns as an include()-style tuple;
+# unwrap the actual pattern list so the namespace/wrapping is fully explicit.
+_two_factor_urlpatterns = _two_factor_urlpatterns[0]
+
 # Admin lives at a non-default path in production (ADMIN_URL env), reducing scanner noise
 _admin_path = os.environ.get("ADMIN_URL", "admin/").strip("/")
 
 urlpatterns = [
     path(f"{_admin_path}/", admin.site.urls),
+    # Two-factor auth landing pages (used by the OTP-protected admin login)
+    path("", include((_two_factor_urlpatterns, "two_factor"))),
     path("api/", include("portfolio.accounts.urls")),
     path("api/", include("portfolio.projects.urls")),
     path("api/", include("portfolio.experience.urls")),

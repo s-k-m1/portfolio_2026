@@ -1,5 +1,5 @@
 from rest_framework import viewsets, generics, status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from portfolio.permissions import IsAdminOrReadOnly
 from rest_framework.response import Response
 from .models import Certification
 from .serializers import CertificationSerializer
@@ -8,10 +8,10 @@ from .serializers import CertificationSerializer
 class CertificationViewSet(viewsets.ModelViewSet):
     queryset = Certification.objects.all()
     serializer_class = CertificationSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class CertificationDetailView(generics.RetrieveAPIView):
     queryset = Certification.objects.all()
     serializer_class = CertificationSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]

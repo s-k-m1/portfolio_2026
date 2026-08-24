@@ -31,11 +31,23 @@ export interface Project {
   image_url: string;
   github: string;
   demo: string;
+  client_name: string;
+  client_role: string;
+  client_review: string;
+  client_rating: number | null;
 }
 
 export interface ProjectDetailed extends Project {
   created_at: string;
   updated_at: string;
+}
+
+export interface ProjectReview {
+  id: number;
+  name: string;
+  rating: number;
+  comment: string;
+  created_at: string;
 }
 
 export interface Experience {
@@ -113,6 +125,29 @@ export interface ContactMessage {
   subject: string;
   message: string;
   created_at: string;
+}
+
+export type InquiryStatus = "new" | "replied" | "closed";
+
+export interface InquiryReply {
+  id: number;
+  message: string;
+  sent_by: string;
+  created_at: string;
+}
+
+export interface Inquiry {
+  id: number;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  status: InquiryStatus;
+  read: boolean;
+  ip_address: string | null;
+  created_at: string;
+  updated_at: string;
+  replies: InquiryReply[];
 }
 
 export interface ContentBlock {

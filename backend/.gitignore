@@ -1,6 +1,9 @@
 .env
 node_modules
 venv
+myenv
+.venv
+env/
 db.sqlite3
 staticfiles
 media

@@ -1,17 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Send, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 import { sendContactMessage } from "@/lib/api";
 
 type AlertState = { type: "success" | "error"; message: string } | null;
 
-const initialForm = { name: "", email: "", subject: "", message: "" };
+const initialForm = { name: "", email: "", subject: "", message: "", website: "" };
 
 export default function ContactForm() {
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<AlertState>(null);
   const [sending, setSending] = useState(false);
+
+  // Auto-dismiss success/error messages after 5 seconds.
+  useEffect(() => {
+    if (!status) return;
+    const id = setTimeout(() => setStatus(null), 5000);
+    return () => clearTimeout(id);
+  }, [status]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -31,11 +38,12 @@ export default function ContactForm() {
         message: "Message transmitted securely. I'll get back to you shortly.",
       });
       setForm(initialForm);
-    } catch {
-      setStatus({
-        type: "error",
-        message: "Failed to send the message. Please try again or email me directly.",
-      });
+    } catch (err) {
+      const detail =
+        err instanceof Error && err.message
+          ? err.message
+          : "Failed to send the message. Please try again or email me directly.";
+      setStatus({ type: "error", message: detail });
     } finally {
       setSending(false);
     }
@@ -65,6 +73,19 @@ export default function ContactForm() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Honeypot — hidden from real users; bots fill it and get silently dropped */}
+        <div className="hidden" aria-hidden="true">
+          <label htmlFor="website">Leave this field empty</label>
+          <input
+            id="website"
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={form.website}
+            onChange={handleChange}
+          />
+        </div>
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-slate-300">

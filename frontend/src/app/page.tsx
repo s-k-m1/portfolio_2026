@@ -48,20 +48,6 @@ export default async function HomePage() {
     <>
       {/* HERO */}
       <section className="relative overflow-hidden">
-        <div className="bg-grid absolute inset-0" aria-hidden />
-        <div
-          className="aurora-blob left-[-10%] top-[-15%] h-[26rem] w-[26rem] animate-float bg-indigo-600/30"
-          aria-hidden
-        />
-        <div
-          className="aurora-blob right-[-8%] top-[10%] h-[22rem] w-[22rem] animate-float-slow bg-fuchsia-600/25"
-          aria-hidden
-        />
-        <div
-          className="aurora-blob bottom-[-20%] left-[30%] h-[20rem] w-[20rem] animate-float bg-cyan-500/20"
-          aria-hidden
-        />
-
         <div className="relative mx-auto max-w-7xl px-6 pb-14 pt-16 sm:pt-24">
           <div className="grid items-center gap-10 md:grid-cols-2 md:gap-12">
             <div className="animate-fade-up">
@@ -74,6 +60,10 @@ export default async function HomePage() {
                 {firstName}
                 <span className="text-aurora block">{lastName}</span>
               </h1>
+
+              <p className="mt-4 text-base font-semibold text-violet-300 sm:text-lg">
+                Backend Developer &amp; Full Stack Engineer
+              </p>
 
               <p className="mt-6 max-w-lg leading-relaxed text-slate-400">
                 {profile?.portfolio_description || profile?.tagline || SITE.tagline}
@@ -123,10 +113,6 @@ export default async function HomePage() {
                   height={320}
                   priority
                   className="h-64 w-64 rounded-full object-cover sm:h-80 sm:w-80"
-                />
-                <div
-                  className="aurora-blob -inset-6 -z-10 h-full w-full animate-glow bg-violet-600/30"
-                  aria-hidden
                 />
               </div>
             </div>
@@ -197,10 +183,6 @@ export default async function HomePage() {
       <section className="mx-auto max-w-7xl px-6 py-14">
         <Reveal>
           <div className="glow-card relative overflow-hidden rounded-3xl bg-ink/80 px-8 py-12 text-center">
-            <div
-              className="aurora-blob left-1/2 top-[-60%] h-72 w-72 -translate-x-1/2 animate-glow bg-violet-600/25"
-              aria-hidden
-            />
             <h2 className="relative text-2xl font-bold tracking-tight text-white sm:text-3xl">
               {content["hero-cta-title"] || SITE.tagline}
             </h2>

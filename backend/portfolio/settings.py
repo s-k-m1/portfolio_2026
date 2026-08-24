@@ -14,7 +14,7 @@ DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
 SECRET_KEY = os.environ.get("SECRET_KEY", "")
 if not SECRET_KEY:
     if DEBUG:
-        SECRET_KEY = "dev-only-insecure-secret-key"
+        SECRET_KEY = "dev-only-insecure-secret-key"  # nosec B105 - dev fallback only; prod requires env
     else:
         raise ImproperlyConfigured("SECRET_KEY must be set in production")
 
@@ -24,6 +24,11 @@ if not _allowed and not DEBUG:
     raise ImproperlyConfigured("ALLOWED_HOSTS must be set in production")
 ALLOWED_HOSTS = [h.strip() for h in (_allowed or "*").split(",") if h.strip()]
 
+if not DEBUG:
+    # Railway serves the app from *.railway.app; cover all generated subdomains
+    # so ALLOWED_HOSTS doesn't have to list each one explicitly.
+    ALLOWED_HOSTS += [".railway.app", ".up.railway.app"]
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -32,7 +37,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
+    "django_otp",
+    "django_otp.plugins.otp_static",
+    "django_otp.plugins.otp_totp",
+    "two_factor",
     "portfolio.accounts",
     "portfolio.projects",
     "portfolio.experience",
@@ -53,6 +63,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -76,16 +87,26 @@ TEMPLATES = [
 ]
 
 def _parse_database_url(url: str) -> dict:
-    """Convert a postgres:// URI into Django DB settings."""
-    from urllib.parse import urlsplit
+    """Convert a postgres:// URI into Django DB settings.
+
+    Forwards query params such as ``sslmode`` (Neon rejects non-TLS
+    connections, so the URL must carry ``?sslmode=require``).
+    """
+    from urllib.parse import urlsplit, parse_qs
 
     parts = urlsplit(url)
+    query = {k: v[-1] for k, v in parse_qs(parts.query).items()}
+    options = {}
+    sslmode = query.get("sslmode")
+    if sslmode:
+        options["sslmode"] = sslmode
     return {
         "NAME": parts.path.strip("/"),
         "USER": parts.username or "postgres",
         "PASSWORD": parts.password or "",
         "HOST": parts.hostname or "localhost",
         "PORT": str(parts.port or 5432),
+        "OPTIONS": options,
     }
 
 
@@ -101,6 +122,7 @@ DATABASES = {
         "PASSWORD": _db_parsed.get("PASSWORD") or os.environ.get("DB_PASSWORD", ""),
         "HOST": _db_parsed.get("HOST") or os.environ.get("DB_HOST", "localhost"),
         "PORT": _db_parsed.get("PORT") or os.environ.get("DB_PORT", "5432"),
+        "OPTIONS": _db_parsed.get("OPTIONS", {}),
     }
 }
 
@@ -121,7 +143,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+        "portfolio.permissions.IsAdminOrReadOnly",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
@@ -129,12 +151,14 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 100,
+    # XFF-aware classes: key on the true client IP (proxy appends it), not on a
+    # client-spoofable header or the shared proxy address. See throttling.py.
     "DEFAULT_THROTTLE_CLASSES": [
-        "rest_framework.throttling.AnonRateThrottle",
-        "rest_framework.throttling.UserRateThrottle",
+        "portfolio.throttling.XFFAnonRateThrottle",
+        "portfolio.throttling.XFFUserRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "contact": "5/hour",
+        "contact": "30/hour",
         "anon": "60/min",
         "user": "600/hour",
     },
@@ -148,6 +172,19 @@ if DEBUG:
         "rest_framework.renderers.BrowsableAPIRenderer"
     )
 
+# Login: two-factor authentication protects the admin; staff sign in at /account/
+LOGIN_URL = "two_factor:login"
+LOGIN_REDIRECT_URL = "admin:index"
+TWO_FACTOR_PATCH_ADMIN = True  # default Django admin becomes OTP-required
+
+# Rate limiting: trust X-Forwarded-For only behind exactly one trusted proxy
+# (Render). DRF's default trusts the client header unconditionally, so this
+# must stay off ("off") if the origin could ever be reached directly.
+THROTTLE_USE_XFF = (
+    os.environ.get("THROTTLE_USE_XFF", "off" if DEBUG else "on").lower()
+    in {"1", "true", "on", "yes"}
+)
+
 # CORS: only explicit frontend origins, never '*'
 _cors = [o.strip() for o in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if o.strip()]
 CORS_ALLOWED_ORIGINS = _cors or [
@@ -155,6 +192,12 @@ CORS_ALLOWED_ORIGINS = _cors or [
     "http://127.0.0.1:3000",
 ]
 CORS_ALLOW_CREDENTIALS = True
+# Allow any Vercel deployment (production + preview branches) without having to
+# list every generated *.vercel.app hostname. Explicit production origins should
+# still be set via CORS_ALLOWED_ORIGINS.
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.vercel\.app$",
+]
 
 # Security hardening
 SECURE_CONTENT_TYPE_NOSNIFF = True
