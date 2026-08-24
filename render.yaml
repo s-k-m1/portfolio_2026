@@ -1,20 +1,9 @@
-# Render Blueprint — Portfolio
-# Requires: push this repo (frontend/ + backend/) to GitHub, then create a
-# Blueprint from the GitHub repo. Service URLs below assume default names:
-#   API:      https://portfolio-api.onrender.com
-#   Frontend: https://portfolio-frontend.onrender.com
-# Change ALLOWED_HOSTS / CORS_ALLOWED_ORIGINS if you rename services or use a custom domain.
-
-databases:
-  - name: portfolio-postgres
-    plan: free
-    databaseName: portfolio_db
-    user: portfolio
+# Render Blueprint — Portfolio Backend (Django REST API)
+# Deploy: push repo to GitHub, then New → Blueprint → select the repo.
+# The database is hosted on Neon — set DATABASE_URL in the dashboard as a secret
+# (it is intentionally NOT committed here). The frontend is deployed on Vercel.
 
 services:
-  # ---------------------------------------------------------------------
-  # Backend — Django REST Framework
-  # ---------------------------------------------------------------------
   - type: web
     name: portfolio-api
     runtime: python
@@ -23,6 +12,7 @@ services:
     buildCommand: pip install -r requirements.txt
     preDeployCommand: python manage.py migrate --noinput && python manage.py collectstatic --noinput && python manage.py seed_portfolio
     startCommand: gunicorn portfolio.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+    healthCheckPath: /
     envVars:
       - key: DEBUG
         value: "False"
@@ -31,17 +21,16 @@ services:
       - key: PYTHON_VERSION
         value: "3.13.0"
       - key: ALLOWED_HOSTS
-        value: portfolio-api.onrender.com
+        value: .onrender.com
       - key: ADMIN_URL
         value: dashboard
       - key: CORS_ALLOWED_ORIGINS
-        value: https://portfolio-frontend.onrender.com
+        value: https://frontend-six-alpha-12.vercel.app
       - key: SECURE_SSL_REDIRECT
         value: "True"
+      # Set this in the Render dashboard as a secret (Neon direct connection string)
       - key: DATABASE_URL
-        fromDatabase:
-          name: portfolio-postgres
-          property: connectionString
+        sync: false
       - key: CONTACT_EMAIL
         value: mr.skm05@gmail.com
       - key: EMAIL_BACKEND
@@ -58,26 +47,3 @@ services:
         value: "True"
       - key: DEFAULT_FROM_EMAIL
         value: mr.skm05@gmail.com
-      # Optional: bootstrap an admin account on first deploy (then remove these vars!)
-      - key: ADMIN_USERNAME
-        sync: false
-      - key: ADMIN_PASSWORD
-        sync: false
-
-  # ---------------------------------------------------------------------
-  # Frontend — Next.js (static + SSG/ISR, server-rendered on demand)
-  # ---------------------------------------------------------------------
-  - type: web
-    name: portfolio-frontend
-    runtime: node
-    plan: free
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
-    envVars:
-      - key: NODE_VERSION
-        value: "20.x"
-      - key: NEXT_PUBLIC_API_URL
-        value: https://portfolio-api.onrender.com/api
-      - key: NEXT_PUBLIC_SITE_URL
-        value: https://portfolio-frontend.onrender.com
