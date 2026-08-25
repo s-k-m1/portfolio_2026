@@ -1,4 +1,6 @@
+from rest_framework import viewsets
 from rest_framework import viewsets, generics, status
+from portfolio.cache_mixin import SimpleCacheResponseMixin
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from portfolio.permissions import IsAdminOrReadOnly
@@ -11,7 +13,7 @@ from .serializers import (
 )
 
 
-class ProjectViewSet(viewsets.ModelViewSet):
+class ProjectViewSet(SimpleCacheResponseMixin, viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAdminOrReadOnly]
@@ -56,7 +58,7 @@ class PublicProjectReviewListCreateView(generics.ListCreateAPIView):
         )
 
 
-class ProjectReviewAdminViewSet(viewsets.ModelViewSet):
+class ProjectReviewAdminViewSet(SimpleCacheResponseMixin, viewsets.ModelViewSet):
     queryset = ProjectReview.objects.all()
     serializer_class = ProjectReviewAdminSerializer
     permission_classes = [IsAdminOrReadOnly]

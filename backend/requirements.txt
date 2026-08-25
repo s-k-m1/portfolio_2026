@@ -7,3 +7,4 @@ whitenoise>=6.6
 Pillow>=10.0
 python-dotenv>=1.0
 django-two-factor-auth>=1.16
+redis>=5.0

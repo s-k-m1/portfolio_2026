@@ -6,7 +6,9 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.utils import timezone
 from django.utils.html import escape
+from rest_framework import viewsets
 from rest_framework import viewsets, generics, status
+from portfolio.cache_mixin import SimpleCacheResponseMixin
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -50,7 +52,7 @@ def _send_async(email_message: EmailMultiAlternatives) -> None:
     threading.Thread(target=_run, daemon=True).start()
 
 
-class ContactMessageViewSet(viewsets.ModelViewSet):
+class ContactMessageViewSet(SimpleCacheResponseMixin, viewsets.ModelViewSet):
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
     permission_classes = [IsAdminOrReadOnly]

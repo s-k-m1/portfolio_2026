@@ -1,4 +1,6 @@
+from rest_framework import viewsets
 from rest_framework import viewsets, generics, status
+from portfolio.cache_mixin import SimpleCacheResponseMixin
 from rest_framework.permissions import IsAuthenticated
 from portfolio.permissions import IsAdminOrReadOnly
 from rest_framework.response import Response
@@ -9,7 +11,7 @@ from .serializers import (
 )
 
 
-class BlogPostViewSet(viewsets.ModelViewSet):
+class BlogPostViewSet(SimpleCacheResponseMixin, viewsets.ModelViewSet):
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
     permission_classes = [IsAdminOrReadOnly]
@@ -33,7 +35,7 @@ class BlogPostCategoryView(generics.ListAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class BlogTagViewSet(viewsets.ModelViewSet):
+class BlogTagViewSet(SimpleCacheResponseMixin, viewsets.ModelViewSet):
     queryset = BlogTag.objects.all()
     serializer_class = BlogTagSerializer
     permission_classes = [IsAdminOrReadOnly]
@@ -45,7 +47,7 @@ class BlogTagDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class BlogPostTagViewSet(viewsets.ModelViewSet):
+class BlogPostTagViewSet(SimpleCacheResponseMixin, viewsets.ModelViewSet):
     queryset = BlogPostTag.objects.all()
     serializer_class = BlogPostTagSerializer
     permission_classes = [IsAdminOrReadOnly]

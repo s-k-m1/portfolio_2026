@@ -236,3 +236,28 @@ LOGGING = {
     },
     "root": {"handlers": ["console"], "level": "INFO"},
 }
+
+# ---------------------------------------------------------------------------
+# Caching: use Redis when REDIS_URL is provided, otherwise fall back to an
+# in-memory cache so the app still runs. Reads are cached; writes invalidate.
+# ---------------------------------------------------------------------------
+REDIS_URL = os.environ.get("REDIS_URL")
+try:
+    CACHE_TTL = int(os.environ.get("CACHE_TTL", "300"))
+except (TypeError, ValueError):
+    CACHE_TTL = 300
+
+if REDIS_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": REDIS_URL,
+            "OPTIONS": {"socket_timeout": 3, "socket_connect_timeout": 3},
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        }
+    }
