@@ -4,6 +4,18 @@
 # (it is intentionally NOT committed here). The frontend is deployed on Vercel.
 
 services:
+  # Optional managed Redis (Render paid plans). If you enable this, change the
+  # REDIS_URL env var below from `sync: false` to pull from this service:
+  #   fromService:
+  #     type: redis
+  #     name: portfolio-redis
+  #     property: connectionString
+  # - type: redis
+  #   name: portfolio-redis
+  #   plan: free
+  #   ipAllowList:
+  #     - cidrBlock: 0.0.0.0/0
+  #       description: everywhere
   - type: web
     name: portfolio-api
     runtime: python
@@ -28,6 +40,10 @@ services:
         value: https://frontend-six-alpha-12.vercel.app
       - key: SECURE_SSL_REDIRECT
         value: "True"
+      # Optional Redis cache — set REDIS_URL in the dashboard as a secret
+      # (e.g. an Upstash Redis URL, or Render's managed Redis on paid plans).
+      - key: REDIS_URL
+        sync: false
       # Set this in the Render dashboard as a secret (Neon direct connection string)
       - key: DATABASE_URL
         sync: false
