@@ -5,6 +5,21 @@
   --color-ink: #0b0e1a;
   --color-panel: #111529;
 
+  /* Admin light theme (dark-gray sidebar + greenish-white canvas) */
+  --color-sidebar: #222a33;
+  --color-sidebar-soft: #2b333d;
+  --color-canvas: #eef4ef;
+  --color-canvas-soft: #e4ede7;
+  --color-ink-2: #1b2530;
+  --color-muted: #5d6b7a;
+  --color-line: #d4e0d8;
+  --color-card: #ffffff;
+  --color-accent: #10b981;
+  --color-accent-strong: #059669;
+  --color-accent-soft: #d1fae5;
+  --color-amber: #f59e0b;
+  --color-rose: #e11d48;
+
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-fade-in: fade-in 0.8s ease-out both;
   --animate-float: float 7s ease-in-out infinite;
@@ -201,4 +216,58 @@ body {
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ===== Admin light theme helpers (dark-gray sidebar + greenish-white canvas) ===== */
+.admin-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 12px 30px -16px rgba(16, 24, 40, 0.2);
+}
+.admin-input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-line);
+  background: #ffffff;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  color: var(--color-ink-2);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.admin-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  padding: 0.625rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.admin-btn-primary {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
+  color: #fff;
+  box-shadow: 0 10px 22px -10px rgba(16, 185, 129, 0.6);
+}
+.admin-btn-primary:hover {
+  filter: brightness(1.05);
+}
+.admin-btn-ghost {
+  border: 1px solid var(--color-line);
+  background: #fff;
+  color: var(--color-ink-2);
+}
+.admin-btn-ghost:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent-strong);
 }

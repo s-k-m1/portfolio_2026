@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { Pencil, Trash2, Plus, Loader2, X } from "lucide-react";
+import { useEffect, useCallback, useState } from "react";
+import { Pencil, Trash2, Plus, Loader2, X, Search } from "lucide-react";
 import { adminFetch } from "@/lib/auth";
+import { mediaUrl } from "@/lib/media";
 import type { ResourceDef, FieldDef } from "@/lib/adminResources";
 
 type Row = Record<string, unknown> & { id: number };
@@ -33,13 +34,16 @@ export default function ResourceManager({
   const [form, setForm] = useState<Record<string, unknown>>({});
   const [files, setFiles] = useState<Record<string, File>>({});
   const [saving, setSaving] = useState(false);
+  const [query, setQuery] = useState("");
 
   const base = `/${resource.key}`;
 
   const load = useCallback(async () => {
     setError(null);
     try {
-      const data = await adminFetch<{ results?: Row[]; count?: number }>(base + "/");
+      const data = await adminFetch<{ results?: Row[]; count?: number }>(
+        base + "/",
+      );
       const rows = Array.isArray(data) ? data : data.results ?? [];
       setItems(rows);
     } catch (err) {
@@ -50,10 +54,7 @@ export default function ResourceManager({
   }, [base]);
 
   useEffect(() => {
-    // Defer to a microtask so the initial setState is not synchronous in the effect.
-    const id = setTimeout(() => {
-      void load();
-    }, 0);
+    const id = setTimeout(() => void load(), 0);
     return () => clearTimeout(id);
   }, [load]);
 
@@ -93,6 +94,8 @@ export default function ResourceManager({
       else delete next[name];
       return next;
     });
+    // keep the File in form state too so the preview thumbnail can show it
+    setForm((prev) => ({ ...prev, [name]: file ?? "" }));
   }
 
   function buildPayload(): FormData | string {
@@ -113,7 +116,10 @@ export default function ResourceManager({
       }
       const v = form[f.name];
       if (v === null || v === undefined) return;
-      fd.append(f.name, f.type === "checkbox" ? (v ? "true" : "false") : String(v));
+      fd.append(
+        f.name,
+        f.type === "checkbox" ? (v ? "true" : "false") : String(v),
+      );
     });
     return fd;
   }
@@ -157,42 +163,66 @@ export default function ResourceManager({
     return String(v);
   }
 
+  const filtered = query
+    ? items.filter((row) =>
+        resource.fields.some((f) => {
+          const v = row[f.name];
+          return v != null && String(v).toLowerCase().includes(query.toLowerCase());
+        }),
+      )
+    : items;
+
   return (
     <div className="min-w-0">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-400">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             Manage
           </p>
-          <h1 className="mt-1 text-3xl font-bold tracking-tight text-white">
+          <h1 className="mt-1 text-3xl font-bold tracking-tight text-ink-2">
             {resource.label}
           </h1>
         </div>
-        {!resource.disableCreate && (
-          <button
-            onClick={openCreate}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition-all hover:brightness-110"
-          >
-            <Plus className="h-4 w-4" /> New {resource.label.replace(/s$/, "")}
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {items.length > 6 && (
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search…"
+                className="admin-input pl-9"
+              />
+            </div>
+          )}
+          {!resource.disableCreate && (
+            <button
+              onClick={openCreate}
+              className="admin-btn admin-btn-primary"
+            >
+              <Plus className="h-4 w-4" /> New {resource.label.replace(/s$/, "")}
+            </button>
+          )}
+        </div>
       </div>
 
       {error && (
-        <p className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+        <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
           {error}
         </p>
       )}
 
       {editing ? (
-        <div className="glass rounded-2xl p-6">
+        <div className="admin-card p-6">
           <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">
-              {editing === "new" ? `New ${resource.label.replace(/s$/, "")}` : "Edit"}
+            <h2 className="text-lg font-semibold text-ink-2">
+              {editing === "new"
+                ? `New ${resource.label.replace(/s$/, "")}`
+                : "Edit"}
             </h2>
             <button
               onClick={() => setEditing(null)}
-              className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white"
+              className="rounded-lg p-2 text-muted hover:bg-canvas-soft hover:text-ink-2"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
@@ -222,66 +252,76 @@ export default function ResourceManager({
             <button
               onClick={save}
               disabled={saving}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition-all hover:brightness-110 disabled:opacity-60"
+              className="admin-btn admin-btn-primary disabled:opacity-60"
             >
               {saving && <Loader2 className="h-4 w-4 animate-spin" />}
               Save
             </button>
             <button
               onClick={() => setEditing(null)}
-              className="rounded-xl border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+              className="admin-btn admin-btn-ghost"
             >
               Cancel
             </button>
           </div>
         </div>
       ) : loading ? (
-        <p className="text-sm text-slate-500">Loading…</p>
-      ) : items.length === 0 ? (
-        <p className="text-sm text-slate-500">No records yet.</p>
+        <p className="text-sm text-muted">Loading…</p>
+      ) : filtered.length === 0 ? (
+        <p className="text-sm text-muted">No records yet.</p>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-white/10">
-          <table className="w-full min-w-[480px] text-left text-sm">
-            <thead className="bg-white/5 text-xs uppercase tracking-wider text-slate-400">
-              <tr>
-                <th className="px-4 py-3">{resource.titleField}</th>
-                {resource.subtitleField && (
-                  <th className="px-4 py-3">{resource.subtitleField}</th>
-                )}
-                <th className="px-4 py-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((row) => (
-                <tr key={row.id} className="border-t border-white/10">
-                  <td className="px-4 py-3 font-medium text-white">{title(row)}</td>
+        <div className="admin-card overflow-hidden p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[480px] text-left text-sm">
+              <thead className="bg-canvas-soft text-xs uppercase tracking-wider text-muted">
+                <tr>
+                  <th className="px-4 py-3 font-semibold text-ink-2">
+                    {resource.titleField}
+                  </th>
                   {resource.subtitleField && (
-                    <td className="px-4 py-3 text-slate-400">
-                      {String(row[resource.subtitleField] ?? "")}
-                    </td>
+                    <th className="px-4 py-3 font-semibold text-ink-2">
+                      {resource.subtitleField}
+                    </th>
                   )}
-                  <td className="px-4 py-3">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => openEdit(row)}
-                        className="rounded-lg border border-white/10 bg-white/5 p-2 text-slate-300 hover:border-violet-400/40 hover:text-violet-300"
-                        aria-label="Edit"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => remove(row)}
-                        className="rounded-lg border border-white/10 bg-white/5 p-2 text-slate-300 hover:border-red-400/40 hover:text-red-300"
-                        aria-label="Delete"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
+                  <th className="px-4 py-3 text-right font-semibold text-ink-2">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filtered.map((row) => (
+                  <tr key={row.id} className="border-t border-line">
+                    <td className="px-4 py-3 font-medium text-ink-2">
+                      {title(row)}
+                    </td>
+                    {resource.subtitleField && (
+                      <td className="px-4 py-3 text-muted">
+                        {String(row[resource.subtitleField] ?? "")}
+                      </td>
+                    )}
+                    <td className="px-4 py-3">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => openEdit(row)}
+                          className="rounded-lg border border-line bg-white p-2 text-muted hover:border-accent/40 hover:text-accent-strong"
+                          aria-label="Edit"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => remove(row)}
+                          className="rounded-lg border border-line bg-white p-2 text-muted hover:border-rose-400/50 hover:text-rose-600"
+                          aria-label="Delete"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
@@ -302,25 +342,45 @@ function Field({
   onFile: (file: File | null) => void;
 }) {
   const wrap = def.full ? "md:col-span-2" : "";
-  const inputCls =
-    "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition-colors focus:border-violet-400/50";
+  const inputCls = "admin-input";
+
+  // Live preview for file (image) fields.
+  const [preview, setPreview] = useState<string | null>(null);
+  useEffect(() => {
+    setPreview(null);
+    if (value instanceof File) {
+      const objUrl = URL.createObjectURL(value);
+      setPreview(objUrl);
+      return () => URL.revokeObjectURL(objUrl);
+    }
+    const resolved = mediaUrl(currentUrl);
+    if (resolved) setPreview(resolved);
+  }, [value, currentUrl]);
 
   if (def.type === "file") {
     return (
       <div className={wrap}>
-        <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-slate-400">
+        <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted">
           {def.label}
         </label>
+        {preview && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={preview}
+            alt={def.label}
+            className="mb-2 h-24 w-24 rounded-lg border border-line object-cover"
+          />
+        )}
         <input
           type="file"
-          accept="image/*"
+          accept="image/png,image/jpeg,image/jpg,image/webp"
           onChange={(e) => onFile(e.target.files?.[0] ?? null)}
-          className="w-full text-sm text-slate-400 file:mr-3 file:rounded-lg file:border-0 file:bg-violet-500/20 file:px-4 file:py-2 file:text-violet-200"
+          className="w-full text-sm text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-accent-soft file:px-4 file:py-2 file:text-accent-strong"
         />
         {currentUrl && !currentUrl.startsWith("data:") && (
-          <p className="mt-1 truncate text-xs text-slate-500">{currentUrl}</p>
+          <p className="mt-1 truncate text-xs text-muted">{currentUrl}</p>
         )}
-        {def.help && <p className="mt-1 text-xs text-slate-500">{def.help}</p>}
+        {def.help && <p className="mt-1 text-xs text-muted">{def.help}</p>}
       </div>
     );
   }
@@ -332,9 +392,9 @@ function Field({
           type="checkbox"
           checked={Boolean(value)}
           onChange={(e) => onChange(e.target.checked)}
-          className="h-4 w-4 accent-violet-500"
+          className="h-4 w-4 accent-accent"
         />
-        <label className="text-sm text-slate-300">{def.label}</label>
+        <label className="text-sm text-ink-2">{def.label}</label>
       </div>
     );
   }
@@ -342,7 +402,7 @@ function Field({
   if (def.type === "textarea") {
     return (
       <div className={wrap}>
-        <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-slate-400">
+        <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted">
           {def.label}
         </label>
         <textarea
@@ -359,7 +419,7 @@ function Field({
   if (def.type === "select") {
     return (
       <div className={wrap}>
-        <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-slate-400">
+        <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted">
           {def.label}
         </label>
         <select
@@ -380,17 +440,21 @@ function Field({
 
   return (
     <div className={wrap}>
-      <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-slate-400">
+      <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted">
         {def.label}
-        {def.required && <span className="text-violet-400"> *</span>}
+        {def.required && <span className="text-accent"> *</span>}
       </label>
       <input
         type={def.type === "number" ? "number" : def.type === "date" ? "date" : "text"}
-        value={def.type === "number" ? (value === null || value === "" ? "" : String(value)) : String(value ?? "")}
-        placeholder={def.placeholder}
-        onChange={(e) =>
-          onChange(def.type === "number" ? e.target.value : e.target.value)
+        value={
+          def.type === "number"
+            ? value === null || value === ""
+              ? ""
+              : String(value)
+            : String(value ?? "")
         }
+        placeholder={def.placeholder}
+        onChange={(e) => onChange(e.target.value)}
         className={inputCls}
       />
     </div>

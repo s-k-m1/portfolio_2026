@@ -46,10 +46,29 @@ async function parse(res: Response) {
   return { ok: res.ok, status: res.status, data };
 }
 
+// Lightweight in-memory cache so the admin dashboard stays snappy. GET
+// responses are cached for a short TTL; any write clears the cache so admin
+// edits appear immediately.
+const ADMIN_CACHE_TTL = 8000;
+const _adminCache = new Map<string, { data: unknown; expires: number }>();
+
+export function clearAdminCache() {
+  _adminCache.clear();
+}
+
 export async function adminFetch<T = unknown>(
   path: string,
   init: RequestInit = {},
 ): Promise<T> {
+  const method = (init.method ?? "GET").toUpperCase();
+  const isWrite = method !== "GET";
+  if (isWrite) clearAdminCache();
+
+  if (!isWrite) {
+    const hit = _adminCache.get(path);
+    if (hit && hit.expires > Date.now()) return hit.data as T;
+  }
+
   const token = getToken();
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
@@ -70,6 +89,9 @@ export async function adminFetch<T = unknown>(
       (data && typeof data === "object" ? JSON.stringify(data) : String(data)) ||
       `Request failed (${status})`;
     throw new Error(message);
+  }
+  if (!isWrite) {
+    _adminCache.set(path, { data, expires: Date.now() + ADMIN_CACHE_TTL });
   }
   return data as T;
 }

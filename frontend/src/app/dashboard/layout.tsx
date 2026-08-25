@@ -71,8 +71,8 @@ export default function AdminLayout({
 
   if (!checked) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-night">
-        <span className="animate-pulse text-sm text-slate-500">
+      <div className="flex min-h-screen items-center justify-center bg-canvas">
+        <span className="animate-pulse text-sm text-muted">
           Verifying access…
         </span>
       </div>
@@ -85,18 +85,15 @@ export default function AdminLayout({
     pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <div className="flex min-h-screen bg-night text-slate-200">
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-white/10 bg-ink/60 p-4 md:flex">
-        <Link
-          href="/dashboard"
-          className="mb-6 flex items-center gap-2.5 px-2 py-1"
-        >
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500">
+    <div className="flex min-h-screen bg-canvas text-ink-2">
+      <aside className="hidden w-64 shrink-0 flex-col bg-sidebar p-4 md:flex">
+        <Link href="/dashboard" className="mb-6 flex items-center gap-2.5 px-2 py-1">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500">
             <ShieldCheck className="h-4 w-4 text-white" />
           </span>
           <div className="leading-tight">
             <p className="text-sm font-bold text-white">Super Admin</p>
-            <p className="text-[11px] text-slate-500">{SITE.shortName}</p>
+            <p className="text-[11px] text-slate-400">{SITE.shortName}</p>
           </div>
         </Link>
 
@@ -106,13 +103,13 @@ export default function AdminLayout({
             className={`${linkBase} ${
               isActive("/dashboard") && pathname === "/dashboard"
                 ? "bg-white/10 text-white"
-                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                : "text-slate-300 hover:bg-white/5 hover:text-white"
             }`}
           >
             <LayoutDashboard className="h-4 w-4" /> Dashboard
           </Link>
 
-          <p className="px-3 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-widest text-slate-600">
+          <p className="px-3 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-widest text-slate-500">
             Content
           </p>
           {ADMIN_RESOURCES.map((r) => (
@@ -122,7 +119,7 @@ export default function AdminLayout({
               className={`${linkBase} ${
                 isActive(`/dashboard/${r.key}`)
                   ? "bg-white/10 text-white"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  : "text-slate-300 hover:bg-white/5 hover:text-white"
               }`}
             >
               {r.label}
@@ -134,7 +131,7 @@ export default function AdminLayout({
             className={`${linkBase} ${
               isActive("/dashboard/inquiries")
                 ? "bg-white/10 text-white"
-                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                : "text-slate-300 hover:bg-white/5 hover:text-white"
             }`}
           >
             <Mail className="h-4 w-4" /> Inquiries
@@ -145,14 +142,14 @@ export default function AdminLayout({
           <Link
             href="/"
             target="_blank"
-            className={`${linkBase} text-slate-400 hover:bg-white/5 hover:text-white`}
+            className={`${linkBase} text-slate-300 hover:bg-white/5 hover:text-white`}
           >
             <ExternalLink className="h-4 w-4" /> View Site
           </Link>
           <button
             onClick={onLogout}
             disabled={busy}
-            className={`${linkBase} text-slate-400 hover:bg-red-500/10 hover:text-red-300`}
+            className={`${linkBase} text-slate-300 hover:bg-rose-500/15 hover:text-rose-300`}
           >
             <LogOut className="h-4 w-4" /> Log out
           </button>
@@ -160,11 +157,11 @@ export default function AdminLayout({
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-white/10 bg-ink/40 px-5 py-3 md:hidden">
-          <span className="text-sm font-bold text-white">Super Admin</span>
+        <header className="flex items-center justify-between border-b border-line bg-white/70 px-5 py-3 md:hidden">
+          <span className="text-sm font-bold text-ink-2">Super Admin</span>
           <button
             onClick={onLogout}
-            className="rounded-lg p-2 text-slate-400 hover:text-red-300"
+            className="rounded-lg p-2 text-muted hover:text-rose-500"
             aria-label="Log out"
           >
             <LogOut className="h-4 w-4" />
